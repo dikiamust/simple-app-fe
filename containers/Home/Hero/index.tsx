@@ -2,11 +2,9 @@ import { Box, styled, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import React from 'react';
 
-import SignupFormFormik from 'components/Signup';
-
 const Section = styled(Box)(({ theme }) => ({
   backgroundColor: '#FFFCF9',
-  minHeight: '80vh',
+  minHeight: '35vh',
   marginTop: '-20px',
   paddingTop: '20px',
   [theme.breakpoints.down('md')]: {
@@ -51,10 +49,6 @@ const Title3 = styled(Typography)(({ theme }) => ({
   my: 4,
 }));
 
-const SignupFormContainer = styled(Box)(({ theme }) => ({
-  flex: '1.25',
-}));
-
 const TextWrapper = styled(Box)(({ theme }) => ({
   flex: '1',
 }));
@@ -72,10 +66,6 @@ const Hero = () => {
               ipsa.
             </Title3>
           </TextWrapper>
-
-          {/* <SignupFormContainer>
-            <SignupFormFormik />
-          </SignupFormContainer> */}
         </CustomBox>
       </Container>
     </Section>

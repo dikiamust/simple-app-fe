@@ -4,12 +4,14 @@ import React from 'react';
 import Footer from 'components/Footer';
 import Hero from './Hero';
 import Header from 'components/Header';
+import Agenda from './agenda';
 
 const Home = () => {
   return (
     <>
       <Header />
       <Hero />
+      <Agenda />
       <Footer />
     </>
   );
