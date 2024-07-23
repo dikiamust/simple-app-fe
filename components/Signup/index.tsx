@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-
+import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import BASE_URL from 'utils/baseUrl';
-
 import ErrorIcon from '@/svg/error-icon.svg';
 import { validationSchema } from './ validationSchema';
 import { ErrorTextAuth } from 'components/ErrorTextAuth';
@@ -58,8 +57,9 @@ interface State {
 }
 
 const SignupFormFormik: NextPage = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [valuesPass, setValues] = useState<State>({
     password: '',
     showPassword: false,
@@ -95,9 +95,13 @@ const SignupFormFormik: NextPage = () => {
 
         if (response.status === 201) {
           toast.success(`Signup successfully`);
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          if (response?.data?.data?.token) {
+            localStorage.setItem('authToken', response?.data?.data?.token);
+          }
+
+          setTimeout(async () => {
+            await router.push('/');
+          }, 1500);
         }
       } catch (error) {
         toast.error(`Signup failed`);

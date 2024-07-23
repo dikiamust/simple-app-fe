@@ -45,8 +45,15 @@ const Title = styled(Typography)(({ theme }) => ({
   },
 }));
 
+interface AgendaItem {
+  Id: number;
+  Subject: string;
+  StartTime: Date;
+  EndTime: Date;
+}
+
 const Agendas = () => {
-  const [dataAgenda, setDataAgenda] = React.useState([]);
+  const [dataAgenda, setDataAgenda] = React.useState<AgendaItem[]>([]);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -58,7 +65,7 @@ const Agendas = () => {
           },
         });
 
-        const data = response.data.data.map((item: any) => ({
+        const data: AgendaItem[] = response.data.data.map((item: any) => ({
           Id: item.id,
           Subject: item.title,
           StartTime: new Date(item.startDateTime),
@@ -73,6 +80,42 @@ const Agendas = () => {
     fetchData();
   }, []);
 
+  const onActionComplete = async (args: any) => {
+    if (args.requestType === 'eventCreated') {
+      const newEvent = args.data[0];
+
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.post(
+          `${BASE_URL}agenda`,
+          {
+            title: newEvent.Subject,
+            startDateTime: newEvent.StartTime,
+            endDateTime: newEvent.EndTime,
+            assignedUser: [3], // currently feature of assignedUser is still useless
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Api-Version': 'v1',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const newAgendaItem: AgendaItem = {
+          Id: response?.data?.data?.id,
+          Subject: response?.data?.data?.title,
+          StartTime: new Date(response?.data?.data?.startDateTime),
+          EndTime: new Date(response?.data?.data?.endDateTime),
+        };
+        setDataAgenda((prevData) => [...prevData, newAgendaItem]);
+      } catch (error) {
+        console.error('Error creating new event:', error);
+      }
+    }
+  };
+
   return (
     <>
       <Section>
@@ -83,6 +126,7 @@ const Agendas = () => {
             eventSettings={{
               dataSource: dataAgenda,
             }}
+            actionComplete={onActionComplete}
           >
             <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
           </ScheduleComponent>
