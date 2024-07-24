@@ -113,6 +113,54 @@ const Agendas = () => {
       } catch (error) {
         console.error('Error creating new event:', error);
       }
+    } else if (args.requestType === 'eventChanged') {
+      const updatedEvent = args.data[0];
+      try {
+        const getDetailAgenda = await axios.get(
+          `${BASE_URL}agenda/${updatedEvent.Id}/public`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Api-Version': 'v1',
+            },
+          }
+        );
+
+        const response = await axios.patch(
+          `${BASE_URL}agenda/${updatedEvent.Id}`,
+          {
+            title: updatedEvent?.Subject || getDetailAgenda?.data?.data?.title,
+            startDateTime:
+              updatedEvent?.StartTime ||
+              getDetailAgenda?.data?.data?.startDateTime,
+            endDateTime:
+              updatedEvent?.EndTime || getDetailAgenda?.data?.data?.endDateTime,
+            assignedUser: getDetailAgenda?.data?.data?.assignedUser.map(Number),
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Api-Version': 'v1',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setDataAgenda((prevData) =>
+          prevData.map((event) =>
+            event.Id === updatedEvent.Id
+              ? {
+                  Id: response.data.id,
+                  Subject: response.data.title,
+                  StartTime: new Date(response.data.startDateTime),
+                  EndTime: new Date(response.data.endDateTime),
+                }
+              : event
+          )
+        );
+      } catch (error) {
+        console.error('Error updating event:', error);
+      }
     } else if (args.requestType === 'eventRemoved') {
       const deletedEvent = args.data[0];
       try {
