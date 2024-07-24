@@ -81,11 +81,11 @@ const Agendas = () => {
   }, []);
 
   const onActionComplete = async (args: any) => {
+    const token = localStorage.getItem('authToken');
     if (args.requestType === 'eventCreated') {
       const newEvent = args.data[0];
 
       try {
-        const token = localStorage.getItem('authToken');
         const response = await axios.post(
           `${BASE_URL}agenda`,
           {
@@ -112,6 +112,22 @@ const Agendas = () => {
         setDataAgenda((prevData) => [...prevData, newAgendaItem]);
       } catch (error) {
         console.error('Error creating new event:', error);
+      }
+    } else if (args.requestType === 'eventRemoved') {
+      const deletedEvent = args.data[0];
+      try {
+        await axios.delete(`${BASE_URL}agenda/${deletedEvent.Id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Api-Version': 'v1',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setDataAgenda((prevData) =>
+          prevData.filter((event) => event.Id !== deletedEvent.Id)
+        );
+      } catch (error) {
+        console.error('Error deleting event:', error);
       }
     }
   };
