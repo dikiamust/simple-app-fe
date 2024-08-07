@@ -9,8 +9,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Meta
-        title="Event Management"
-        description="Event Management"
+        title="Simple-App"
+        description="Simple-App"
         pathName="/"
         thumbnail=""
       />

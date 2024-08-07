@@ -100,7 +100,7 @@ const SignupFormFormik: NextPage = () => {
           }
 
           setTimeout(async () => {
-            await router.push('/');
+            await router.push('/dashboard');
           }, 1500);
         }
       } catch (error) {

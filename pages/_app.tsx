@@ -4,14 +4,14 @@ import type { AppProps } from 'next/app';
 import Scroll from 'react-scroll';
 
 import ThemeProvider from '../theme';
-import '../node_modules/@syncfusion/ej2-base/styles/material.css';
-import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
-import '../node_modules/@syncfusion/ej2-calendars/styles/material.css';
-import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
-import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
-import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
-import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
-import '../node_modules/@syncfusion/ej2-react-schedule/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-base/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-calendars/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
+// import '../node_modules/@syncfusion/ej2-react-schedule/styles/material.css';
 
 declare global {
   interface Window {

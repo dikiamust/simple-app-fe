@@ -25,28 +25,12 @@ const CustomBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  fontSize: '64px',
-  color: '#000336',
-  fontWeight: 'bold',
-  margin: theme.spacing(4, 0, 4, 0),
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '40px',
-  },
-}));
-
 const Title2 = styled(Typography)(({ theme }) => ({
   fontSize: '23px',
   color: '#687690',
   fontWeight: '500',
   mt: 10,
   mb: 4,
-}));
-
-const Title3 = styled(Typography)(({ theme }) => ({
-  fontSize: '18px',
-  color: '#5A6473',
-  my: 4,
 }));
 
 const TextWrapper = styled(Box)(({ theme }) => ({
@@ -59,12 +43,7 @@ const Hero = () => {
       <Container>
         <CustomBox>
           <TextWrapper>
-            <Title2>Welcome to Green Peace</Title2>
-            <Title variant="h1">Explore and Join Our Events.</Title>
-            <Title3>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem,
-              ipsa.
-            </Title3>
+            <Title2>Welcome to Simple-App Dashboard</Title2>
           </TextWrapper>
         </CustomBox>
       </Container>
