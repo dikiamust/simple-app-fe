@@ -6,6 +6,8 @@ import BASE_URL from 'utils/baseUrl';
 import ErrorIcon from '@/svg/error-icon.svg';
 import { validationSchema } from './ validationSchema';
 import { ErrorTextAuth } from 'components/ErrorTextAuth';
+import { Google as GoogleIcon } from '@mui/icons-material';
+import { signIn, useSession } from 'next-auth/react';
 
 import {
   Box,
@@ -110,6 +112,16 @@ const SignupFormFormik: NextPage = () => {
       }
     },
   });
+
+  const { data: session, status } = useSession();
+
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl: '/dashboard' });
+  };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -226,6 +238,16 @@ const SignupFormFormik: NextPage = () => {
             startIcon={loading ? <CircularProgress size={20} /> : null}
           >
             {loading ? 'Loading...' : 'Sign Up'}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<GoogleIcon />}
+            onClick={handleGoogleSignIn}
+            sx={{ mt: 2 }}
+          >
+            Signup with Google
           </Button>
         </Box>
       </Wrapper>

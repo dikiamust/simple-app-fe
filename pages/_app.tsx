@@ -2,24 +2,16 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import type { AppProps } from 'next/app';
 import Scroll from 'react-scroll';
-
+import { SessionProvider } from 'next-auth/react';
 import ThemeProvider from '../theme';
-// import '../node_modules/@syncfusion/ej2-base/styles/material.css';
-// import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
-// import '../node_modules/@syncfusion/ej2-calendars/styles/material.css';
-// import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
-// import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
-// import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
-// import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
-// import '../node_modules/@syncfusion/ej2-react-schedule/styles/material.css';
 
 declare global {
   interface Window {
-    GA_INITIALIZED: any; // whatever type you want to give. (any,number,float etc)
+    GA_INITIALIZED: any;
   }
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const router = useRouter();
 
   const autoScrollByHastag = () => {
@@ -37,18 +29,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   };
 
-  useEffect(() => {}, [router.pathname]);
-
   useEffect(() => {
     autoScrollByHastag();
-  }, []);
+  }, [router.asPath]);
 
   return (
-    <>
+    <SessionProvider session={session}>
       <ThemeProvider>
         <Component {...pageProps} />
       </ThemeProvider>
-    </>
+    </SessionProvider>
   );
 }
 

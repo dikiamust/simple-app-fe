@@ -14,34 +14,35 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-
+import { signOut, useSession } from 'next-auth/react';
 // axios
 import axios from 'axios';
-
 // base URL
 import BASE_URL from 'utils/baseUrl';
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const handleLogout = async () => {
     const token = localStorage.getItem('authToken');
     try {
-      const logout = await axios.put(
-        `${BASE_URL}auth/logout`,
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Api-Version': 'v1',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // const logout = await axios.put(
+      //   `${BASE_URL}auth/logout`,
+      //   {},
+      //   {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       'Api-Version': 'v1',
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
       localStorage.removeItem('authToken');
+      signOut({ callbackUrl: '/' });
       // Redirect homepage after logout
       await router.push('/');
     } catch (error) {

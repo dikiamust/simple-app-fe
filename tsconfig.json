@@ -35,7 +35,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "containers/Home/Hero/index.tsxx"  ],
+, "containers/Home/Hero/index.tsxx", "pages/api/auth/[...nextauth].js"  ],
   "exclude": [
     "node_modules"
   ]
