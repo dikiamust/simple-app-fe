@@ -53,7 +53,9 @@ const Wrapper = styled(Box)(({ theme }) => ({
 
 interface State {
   password: string;
+  confirmPassword: string;
   showPassword: boolean;
+  showConfirmPassword: boolean;
 }
 
 const SignupFormFormik: NextPage = () => {
@@ -62,7 +64,9 @@ const SignupFormFormik: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [valuesPass, setValues] = useState<State>({
     password: '',
+    confirmPassword: '',
     showPassword: false,
+    showConfirmPassword: false,
   });
 
   const handleClickShowPassword = () => {
@@ -72,11 +76,18 @@ const SignupFormFormik: NextPage = () => {
     });
   };
 
+  const handleClickShowConfirmPassword = () => {
+    setValues({
+      ...valuesPass,
+      showConfirmPassword: !valuesPass.showConfirmPassword,
+    });
+  };
+
   const formik = useFormik({
     initialValues: {
-      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
     validationSchema,
     onSubmit: async () => {
@@ -93,16 +104,15 @@ const SignupFormFormik: NextPage = () => {
           }
         );
 
-        if (response.status === 200) {
+        if (response.status === 200 && response?.data?.data?.token) {
           toast.success(`Signin successfully`);
-          if (response?.data?.data?.token) {
-            localStorage.setItem('authToken', response?.data?.data?.token);
-          }
-
+          localStorage.setItem('authToken', response?.data?.data?.token);
           setTimeout(async () => {
             await router.push('/dashboard');
           }, 1500);
+          return;
         }
+        toast.error(`Signin failed`);
       } catch (error) {
         toast.error(`Signin failed`);
       } finally {
@@ -191,6 +201,46 @@ const SignupFormFormik: NextPage = () => {
                 />
               </ImageErrorWrapper>
               <ErrorTextAuth>{formik.errors.password}</ErrorTextAuth>
+            </ContainerError>
+          ) : null}
+
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            type={valuesPass.showConfirmPassword ? 'text' : 'password'}
+            name="confirmPassword"
+            label="Confirm Password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle confirm password visibility"
+                    onClick={handleClickShowConfirmPassword}
+                  >
+                    {valuesPass.showConfirmPassword ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+            <ContainerError>
+              <ImageErrorWrapper>
+                <Image
+                  src={ErrorIcon}
+                  alt="Error Icon"
+                  objectFit="fill"
+                  quality={100}
+                />
+              </ImageErrorWrapper>
+              <ErrorTextAuth>{formik.errors.confirmPassword}</ErrorTextAuth>
             </ContainerError>
           ) : null}
 

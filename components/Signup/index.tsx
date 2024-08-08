@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
@@ -55,22 +55,48 @@ const Wrapper = styled(Box)(({ theme }) => ({
 
 interface State {
   password: string;
+  confirmPassword: string;
   showPassword: boolean;
+  showConfirmPassword: boolean;
 }
 
 const SignupFormFormik: NextPage = () => {
+  const { data: session, status } = useSession();
   const router = useRouter();
+
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl: '/dashboard' });
+  };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  console.log('Session status:', status);
+
+  useEffect(() => {
+    console.log('WWW', session);
+    if (session?.token) {
+      localStorage.setItem('authToken', session.token);
+      router.push('/dashboard');
+    }
+  }, [session, router]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [valuesPass, setValues] = useState<State>({
     password: '',
+    confirmPassword: '',
     showPassword: false,
+    showConfirmPassword: false,
   });
 
-  const handleClickShowPassword = () => {
+  const handleClickShowPassword = (field: 'password' | 'confirmPassword') => {
     setValues({
       ...valuesPass,
-      showPassword: !valuesPass.showPassword,
+      [field === 'password' ? 'showPassword' : 'showConfirmPassword']:
+        !valuesPass[
+          field === 'password' ? 'showPassword' : 'showConfirmPassword'
+        ],
     });
   };
 
@@ -79,6 +105,7 @@ const SignupFormFormik: NextPage = () => {
       name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
     validationSchema,
     onSubmit: async () => {
@@ -97,12 +124,12 @@ const SignupFormFormik: NextPage = () => {
 
         if (response.status === 201) {
           toast.success(`Signup successfully`);
-          if (response?.data?.data?.token) {
-            localStorage.setItem('authToken', response?.data?.data?.token);
-          }
+          // if (response?.data?.data?.token) {
+          //   localStorage.setItem('authToken', response?.data?.data?.token);
+          // }
 
           setTimeout(async () => {
-            await router.push('/dashboard');
+            await router.push('/');
           }, 1500);
         }
       } catch (error) {
@@ -112,16 +139,6 @@ const SignupFormFormik: NextPage = () => {
       }
     },
   });
-
-  const { data: session, status } = useSession();
-
-  const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/dashboard' });
-  };
-
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>
@@ -203,7 +220,7 @@ const SignupFormFormik: NextPage = () => {
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
+                    onClick={() => handleClickShowPassword('password')}
                   >
                     {valuesPass.showPassword ? (
                       <VisibilityOff />
@@ -229,11 +246,51 @@ const SignupFormFormik: NextPage = () => {
             </ContainerError>
           ) : null}
 
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            type={valuesPass.showConfirmPassword ? 'text' : 'password'}
+            name="confirmPassword"
+            label="Confirm Password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => handleClickShowPassword('confirmPassword')}
+                  >
+                    {valuesPass.showConfirmPassword ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+            <ContainerError>
+              <ImageErrorWrapper>
+                <Image
+                  src={ErrorIcon}
+                  alt="Error Icon"
+                  objectFit="fill"
+                  quality={100}
+                />
+              </ImageErrorWrapper>
+              <ErrorTextAuth>{formik.errors.confirmPassword}</ErrorTextAuth>
+            </ContainerError>
+          ) : null}
+
           <Button
             type="submit"
             fullWidth
             variant="primary"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ my: 2 }}
             disabled={loading}
             startIcon={loading ? <CircularProgress size={20} /> : null}
           >
@@ -242,10 +299,10 @@ const SignupFormFormik: NextPage = () => {
 
           <Button
             variant="contained"
+            fullWidth
             color="primary"
             startIcon={<GoogleIcon />}
             onClick={handleGoogleSignIn}
-            sx={{ mt: 2 }}
           >
             Signup with Google
           </Button>
