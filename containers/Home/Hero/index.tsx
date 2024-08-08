@@ -4,7 +4,7 @@ import React from 'react';
 
 const Section = styled(Box)(({ theme }) => ({
   backgroundColor: '#FFFCF9',
-  minHeight: '35vh',
+  minHeight: '58vh',
   marginTop: '-20px',
   paddingTop: '20px',
   [theme.breakpoints.down('md')]: {

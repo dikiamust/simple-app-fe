@@ -1,17 +1,16 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
-
 export default NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn({ account, profile }) {
+    async signIn({ account: profile }) {
       if (account?.provider === 'google') {
         try {
           const response = await fetch('http://localhost:3001/auth/google', {
@@ -24,11 +23,14 @@ export default NextAuth({
             body: JSON.stringify({ idToken: account.id_token }),
           });
 
-          console.log('W', response);
           if (response.ok) {
             const session = await response.json();
-            console.log('session ', session); 
-            return session;
+            console.log('session ', session?.data?.token);
+            // return session;
+            return {
+              ...profile,
+              token: session?.data?.token,
+            };
           } else {
             return false;
           }
@@ -37,7 +39,7 @@ export default NextAuth({
           return false;
         }
       }
-      return false; 
+      return false;
     },
   },
 });

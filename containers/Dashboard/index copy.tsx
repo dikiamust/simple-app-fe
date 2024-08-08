@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { useRouter } from 'next/router';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { signOut, useSession } from 'next-auth/react';
 import axios from 'axios';
 import BASE_URL from 'utils/baseUrl';
+import { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -36,10 +37,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const drawerWidth = 240;
 
@@ -76,16 +73,6 @@ const Dashboard = () => {
   });
 
   const [openResetPasswordButton, setOpenResetPasswordButton] = useState(false);
-
-  useEffect(() => {
-    const { token } = router.query;
-
-    if (token) {
-      localStorage.setItem('authToken', token as string);
-
-      router.replace('/dashboard', undefined, { shallow: true });
-    }
-  }, [router]);
 
   useEffect(() => {
     const fetchUserStatistics = async () => {
@@ -185,8 +172,7 @@ const Dashboard = () => {
           },
         }
       );
-
-      setLoggedInUser({ ...loggedInUser, name: response?.data?.data?.name });
+      setLoggedInUser({ ...loggedInUser, name: response.data.data.name });
       setOpenUpdateProfileButton(false);
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -357,18 +343,12 @@ const Dashboard = () => {
                   </TableHead>
                   <TableBody>
                     {users.map((user) => (
-                      <TableRow key={user?.id}>
-                        <TableCell>{user?.name}</TableCell>
-                        <TableCell>{user?.email}</TableCell>
-                        <TableCell>
-                          {new Date(user?.createdAt).toLocaleString()}
-                        </TableCell>
-                        <TableCell>{user?.loginCount}</TableCell>
-                        <TableCell>
-                          {user.logoutAt
-                            ? new Date(user?.logoutAt).toLocaleString()
-                            : 'N/A'}
-                        </TableCell>
+                      <TableRow key={user.id}>
+                        <TableCell>{user.name}</TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>{user.createdAt}</TableCell>
+                        <TableCell>{user.loginCount}</TableCell>
+                        <TableCell>{user.logoutAt}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
