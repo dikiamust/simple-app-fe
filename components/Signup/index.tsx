@@ -72,10 +72,7 @@ const SignupFormFormik: NextPage = () => {
     return <div>Loading...</div>;
   }
 
-  console.log('Session status:', status);
-
   useEffect(() => {
-    console.log('WWW', session);
     if (session?.token) {
       localStorage.setItem('authToken', session.token);
       router.push('/dashboard');
@@ -124,10 +121,6 @@ const SignupFormFormik: NextPage = () => {
 
         if (response.status === 201) {
           toast.success(`Signup successfully`);
-          // if (response?.data?.data?.token) {
-          //   localStorage.setItem('authToken', response?.data?.data?.token);
-          // }
-
           setTimeout(async () => {
             await router.push('/');
           }, 1500);
