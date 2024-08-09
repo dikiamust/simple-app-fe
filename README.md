@@ -1,5 +1,45 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Intro
+
+# Simple-App
+
+**Simple-App** is a user management web application, including authentication, user statistics, and profile management.
+
+## Features
+
+### Authentication
+
+- **Sign Up & Login:**
+  - **Email & Password:** Users can sign up and log in using their email and a user-defined password. Upon registration, the user will receive an email verification link.
+  - **Google OAuth:** Users can sign up and log in using their Google account, bypassing the need for email verification.
+
+### Dashboard
+
+Once logged in, users are redirected to a personalized dashboard where they can access the following:
+
+- **User Profile:**
+
+  - View their username and email.
+
+- **User List:**
+
+  - View a list of all users registered in the application, with the following details for each user:
+    - **Sign-Up Timestamp:** The date and time when the user signed up.
+    - **Login Count:** The number of times the user has logged in.
+    - **Logout Timestamp:** The last time the user logged out.
+
+- **User Statistics:**
+  - **Total Registered Users:** The total number of users who have signed up.
+  - **Active Sessions Today:** The total number of users with active sessions today.
+  - **Average Active Sessions (Last 7 Days):** The average number of users with active sessions over the last 7 days.
+
+### Profile Management
+
+- **Reset Password:** Users can reset their password using the provided form. They need to input their old password, new password, and confirm the new password.
+- **Update Username:** Users can change their username.
+- **Logout:** Users can securely log out from the application.
+
 ## Getting Started
 
 First, run the development server:
