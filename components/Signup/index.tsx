@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import BASE_URL from 'utils/baseUrl';
 import ErrorIcon from '@/svg/error-icon.svg';
-import { validationSchema } from './ validationSchema';
+import { validationSchema } from './validationSchema';
 import { ErrorTextAuth } from 'components/ErrorTextAuth';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { signIn, useSession } from 'next-auth/react';

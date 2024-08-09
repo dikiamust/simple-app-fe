@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import BASE_URL from 'utils/baseUrl';
 import ErrorIcon from '@/svg/error-icon.svg';
-import { validationSchema } from './ validationSchema';
+import { validationSchema } from './validationSchema';
 import { ErrorTextAuth } from 'components/ErrorTextAuth';
+import { Google as GoogleIcon } from '@mui/icons-material';
+import { signIn, useSession } from 'next-auth/react';
 
 import {
   Box,
@@ -58,8 +60,9 @@ interface State {
   showConfirmPassword: boolean;
 }
 
-const SignupFormFormik: NextPage = () => {
+const SigninFormFormik: NextPage = () => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [valuesPass, setValues] = useState<State>({
@@ -120,6 +123,21 @@ const SignupFormFormik: NextPage = () => {
       }
     },
   });
+
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl: '/signin' });
+  };
+
+  useEffect(() => {
+    if (session) {
+      const token = session?.token;
+      if (token) {
+        localStorage.setItem('authToken', token);
+        toast.success('Google Signin successfully');
+        router.push('/dashboard');
+      }
+    }
+  }, [session, router]);
 
   return (
     <>
@@ -254,6 +272,16 @@ const SignupFormFormik: NextPage = () => {
           >
             {loading ? 'Loading...' : 'Sign In'}
           </Button>
+
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            startIcon={<GoogleIcon />}
+            onClick={handleGoogleSignIn}
+          >
+            Sign in with Google
+          </Button>
         </Box>
       </Wrapper>
       <DummyBox />
@@ -262,4 +290,4 @@ const SignupFormFormik: NextPage = () => {
   );
 };
 
-export default SignupFormFormik;
+export default SigninFormFormik;
