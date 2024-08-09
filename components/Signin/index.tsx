@@ -290,7 +290,7 @@ const SigninFormFormik: NextPage = () => {
             color="primary"
             startIcon={<FacebookIcon />}
             sx={{ mt: 1 }}
-            onClick={() => signIn('facebook', { callbackUrl: '/dashboard' })}
+            onClick={() => signIn('facebook', { callbackUrl: '/signin' })}
           >
             Sign in with Facebook
           </Button>
