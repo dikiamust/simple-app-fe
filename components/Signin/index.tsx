@@ -8,6 +8,7 @@ import { validationSchema } from './validationSchema';
 import { ErrorTextAuth } from 'components/ErrorTextAuth';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { signIn, useSession } from 'next-auth/react';
+import { Facebook as FacebookIcon } from '@mui/icons-material';
 
 import {
   Box,
@@ -281,6 +282,17 @@ const SigninFormFormik: NextPage = () => {
             onClick={handleGoogleSignIn}
           >
             Sign in with Google
+          </Button>
+
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            startIcon={<FacebookIcon />}
+            sx={{ mt: 1 }}
+            onClick={() => signIn('facebook', { callbackUrl: '/dashboard' })}
+          >
+            Sign in with Facebook
           </Button>
         </Box>
       </Wrapper>

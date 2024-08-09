@@ -13,6 +13,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - **Sign Up & Login:**
   - **Email & Password:** Users can sign up and log in using their email and a user-defined password. Upon registration, the user will receive an email verification link.
   - **Google OAuth:** Users can sign up and log in using their Google account, bypassing the need for email verification.
+  - **Facebook OAuth:** Users can sign up and log in using their Facebook account, bypassing the need for email verification.
 
 ### Dashboard
 
