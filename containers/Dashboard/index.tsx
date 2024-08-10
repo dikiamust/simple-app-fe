@@ -37,6 +37,7 @@ const drawerWidth = 240;
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
+
   const router = useRouter();
 
   const [loggedInUser, setLoggedInUser] = useState({
@@ -55,6 +56,21 @@ const Dashboard = () => {
 
   const [openResetPasswordButton, setOpenResetPasswordButton] = useState(false);
 
+  const fetchLoggedInUser = async (token: string) => {
+    try {
+      const response = await axios.get(`${BASE_URL}auth/my-profile`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Api-Version': 'v1',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setLoggedInUser(response.data.data);
+    } catch (error) {
+      console.error('Error fetching logged-in user:', error);
+    }
+  };
+
   useEffect(() => {
     const { token } = router.query;
 
@@ -62,27 +78,15 @@ const Dashboard = () => {
       localStorage.setItem('authToken', token as string);
 
       router.replace('/dashboard', undefined, { shallow: true });
+
+      const tokenLocalStorage = localStorage.getItem('authToken');
+      if (tokenLocalStorage) fetchLoggedInUser(tokenLocalStorage);
     }
-  }, [router]);
+  }, [router.query.token]);
 
   useEffect(() => {
-    const fetchLoggedInUser = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.get(`${BASE_URL}auth/my-profile`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Api-Version': 'v1',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setLoggedInUser(response.data.data);
-      } catch (error) {
-        console.error('Error fetching logged-in user:', error);
-      }
-    };
-
-    fetchLoggedInUser();
+    const token = localStorage.getItem('authToken');
+    if (token) fetchLoggedInUser(token);
   }, []);
 
   const handleLogout = async () => {
