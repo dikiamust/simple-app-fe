@@ -37,7 +37,6 @@ const drawerWidth = 240;
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
-
   const router = useRouter();
 
   const [loggedInUser, setLoggedInUser] = useState({
@@ -52,6 +51,12 @@ const Dashboard = () => {
     oldPassword: '',
     newPassword: '',
     confirmNewPassword: '',
+  });
+
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmNewPassword: false,
   });
 
   const [openResetPasswordButton, setOpenResetPasswordButton] = useState(false);
@@ -168,6 +173,15 @@ const Dashboard = () => {
     setPassword((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
+    }));
+  };
+
+  const toggleShowPassword = (
+    field: 'oldPassword' | 'newPassword' | 'confirmNewPassword'
+  ) => {
+    setShowPassword((prevState) => ({
+      ...prevState,
+      [field]: !prevState[field],
     }));
   };
 
@@ -297,42 +311,89 @@ const Dashboard = () => {
             password here.
           </DialogContentText>
           <TextField
-            autoFocus
             margin="dense"
             label="Old Password"
-            type="password"
             fullWidth
             variant="standard"
+            type={showPassword.oldPassword ? 'text' : 'password'}
             name="oldPassword"
             value={password.oldPassword}
             onChange={handleChangePassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => toggleShowPassword('oldPassword')}
+                    edge="end"
+                  >
+                    {showPassword.oldPassword ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             margin="dense"
             label="New Password"
-            type="password"
             fullWidth
             variant="standard"
+            type={showPassword.newPassword ? 'text' : 'password'}
             name="newPassword"
             value={password.newPassword}
             onChange={handleChangePassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => toggleShowPassword('newPassword')}
+                    edge="end"
+                  >
+                    {showPassword.newPassword ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             margin="dense"
             label="Confirm New Password"
-            type="password"
             fullWidth
             variant="standard"
+            type={showPassword.confirmNewPassword ? 'text' : 'password'}
             name="confirmNewPassword"
             value={password.confirmNewPassword}
             onChange={handleChangePassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => toggleShowPassword('confirmNewPassword')}
+                    edge="end"
+                  >
+                    {showPassword.confirmNewPassword ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenResetPasswordButton(false)}>
             Cancel
           </Button>
-          <Button onClick={handleResetPassword}>Reset Password</Button>
+          <Button onClick={handleResetPassword}>Update</Button>
         </DialogActions>
       </Dialog>
     </Box>
